@@ -3,11 +3,14 @@ const { sequelize } = require('../connection');
 
 const BackupFileSize = sequelize.define('BackupFileSize', {
   ID: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     primaryKey: true
   },
   HostID: {
     type: DataTypes.STRING,
+  },
+  FileSizeByte: {
+    type: DataTypes.INTEGER,
   },
   FileSizeMb: {
     type: DataTypes.DECIMAL,

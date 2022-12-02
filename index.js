@@ -20,33 +20,39 @@ const checkFileInFolder = async (folderPath) => {
     files.map(file => {
       const stats = fs.statSync(`${ROOT_FOLDER}${folderPath}/${file}`)
       if (stats.isFile()) {
+        const fileSizeByte = stats.size;
         const fileSizeOnMegabyte = stats.size / (1024 * 1024)
-        const fileSize = fileSizeOnMegabyte.toFixed(2)
-        const createDt = moment(stats.birthtime).format('x')
+        const fileSizeMb = fileSizeOnMegabyte.toFixed(2)
+        // console.log(file, stats.size, fileSizeOnMegabyte, fileSize)
+        const createDt = moment(stats.mtime).format('x')
         return {
           fileName: file,
-          fileSize,
+          fileSizeByte,
+          fileSizeMb,
           createDate: parseInt(createDt)
         }
       }
-    }).sort((a, b) => a.createDate - b.createDate).forEach(async (file, index) => {
+    }).sort((a, b) => b.createDate - a.createDate).forEach(async (file, index) => {
       if (index === 0) {
-        const isSuccessBackup = parseFloat(file.fileSize) >= parseFloat(resultDatabase.FileSizeMb);
+        const isSuccessBackup = parseFloat(file.fileSizeByte) >= parseFloat(resultDatabase.FileSizeByte);
         if (isSuccessBackup) {
           await postBackupReport({
             fileName: file.fileName,
-            fileSize: parseFloat(file.fileSize),
+            fileSizeByte: parseFloat(file.fileSizeByte),
+            fileSizeMb: parseFloat(file.fileSizeMb),
             date: moment(file.createDate, 'x').format('YYYYMMDDHHmm'),
             status: 'S'
           })
           await putBackupFileSize(ClientID, {
             date: moment(file.createDate, 'x').format('YYYYMMDD'),
-            fileSize: parseFloat(file.fileSize)
+            fileSizeByte: parseFloat(file.fileSizeByte),
+            fileSizeMb: parseFloat(file.fileSizeMb),
           })
         } else {
           await postBackupReport({
             fileName: file.fileName,
-            fileSize: parseFloat(file.fileSize),
+            fileSizeByte: parseFloat(file.fileSizeByte),
+            fileSizeMb: parseFloat(file.fileSizeMb),
             date: moment(file.createDate, 'x').format('YYYYMMDDHHmm'),
             status: 'F'
           })

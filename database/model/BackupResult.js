@@ -12,7 +12,10 @@ const BackupResult = sequelize.define('BackupResult', {
   FileName: {
     type: DataTypes.STRING,
   },
-  SizeFile: {
+  SizeFileByte: {
+    type: DataTypes.INTEGER,
+  },
+  SizeFileMb: {
     type: DataTypes.DECIMAL,
   },
   Status: {
