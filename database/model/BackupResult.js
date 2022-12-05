@@ -2,30 +2,69 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../connection');
 
 const BackupResult = sequelize.define('BackupResult', {
-  IdBackup: {
-    type: DataTypes.INTEGER,
-    primaryKey: true
-  },
-  FileCreateDate: {
+  Dt: {
     type: DataTypes.STRING,
+    key: true
+  },
+  Tm: {
+    type: DataTypes.STRING,
+    key: true
+  },
+  ReportDt: {
+    type: DataTypes.STRING,
+  },
+  CtName: {
+    type: DataTypes.STRING,
+    key: true
   },
   FileName: {
     type: DataTypes.STRING,
   },
-  SizeFileByte: {
-    type: DataTypes.INTEGER,
+  DumpingTm: {
+    type: DataTypes.STRING,
   },
-  SizeFileMb: {
+  ArchiveTm: {
+    type: DataTypes.STRING,
+  },
+  UploadTm: {
+    type: DataTypes.STRING,
+  },
+  SqlKB: {
     type: DataTypes.DECIMAL,
   },
-  Status: {
+  SqlMB: {
+    type: DataTypes.DECIMAL,
+  },
+  ZipByte: {
+    type: DataTypes.INTEGER,
+  },
+  ZipKB: {
+    type: DataTypes.DECIMAL,
+  },
+  ZipMB: {
+    type: DataTypes.DECIMAL,
+  },
+  Password: {
     type: DataTypes.STRING,
   },
-  ReportDate: {
+  Location: {
     type: DataTypes.STRING,
   },
+  ErrorMessage: {
+    type: DataTypes.STRING,
+  },
+  StatusBackupAuto: {
+    type: DataTypes.STRING,
+  },
+  StatusBackupManual: {
+    type: DataTypes.STRING,
+  },
+  ManualBackupDt: {
+    type: DataTypes.STRING,
+  },
+
 }, {
-  tableName: 'tblbackupresult',
+  tableName: 'tblbackupresults',
   timestamps: false,
 });
 

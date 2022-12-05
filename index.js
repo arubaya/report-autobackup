@@ -21,13 +21,16 @@ const checkFileInFolder = async (folderPath) => {
       const stats = fs.statSync(`${ROOT_FOLDER}${folderPath}/${file}`)
       if (stats.isFile()) {
         const fileSizeByte = stats.size;
-        const fileSizeOnMegabyte = stats.size / (1024 * 1024)
-        const fileSizeMb = fileSizeOnMegabyte.toFixed(2)
+        const fileSizeOnMegabyte = stats.size / (1024 * 1024);
+        const fileSizeOnKilobyte = stats.size / 1024;
+        const fileSizeKb = fileSizeOnKilobyte.toFixed(2);
+        const fileSizeMb = fileSizeOnMegabyte.toFixed(2);
         // console.log(file, stats.size, fileSizeOnMegabyte, fileSize)
-        const createDt = moment(stats.mtime).format('x')
+        const createDt = moment(stats.mtime).format('x');
         return {
           fileName: file,
           fileSizeByte,
+          fileSizeKb,
           fileSizeMb,
           createDate: parseInt(createDt)
         }
@@ -37,12 +40,22 @@ const checkFileInFolder = async (folderPath) => {
         const isSuccessBackup = parseFloat(file.fileSizeByte) >= parseFloat(resultDatabase.FileSizeByte);
         if (isSuccessBackup) {
           await postBackupReport({
+            date: moment(file.createDate, 'x').format('YYYYMMDD'),
+            time: moment(file.createDate, 'x').format('HH:mm:ss'),
+            clientId: ClientID,
             fileName: file.fileName,
-            fileSizeByte: parseFloat(file.fileSizeByte),
-            fileSizeMb: parseFloat(file.fileSizeMb),
-            date: moment(file.createDate, 'x').format('YYYYMMDDHHmm'),
-            status: 'S'
-          })
+            fileSizeByte: file.fileSizeByte,
+            fileSizeKb: file.fileSizeKb,
+            fileSizeMb: file.fileSizeMb,
+            status: 'S',
+          });
+          // await postBackupReport({
+          //   fileName: file.fileName,
+          //   fileSizeByte: parseFloat(file.fileSizeByte),
+          //   fileSizeMb: parseFloat(file.fileSizeMb),
+          //   date: moment(file.createDate, 'x').format('YYYYMMDDHHmm'),
+          //   status: 'S'
+          // });
           await putBackupFileSize(ClientID, {
             date: moment(file.createDate, 'x').format('YYYYMMDD'),
             fileSizeByte: parseFloat(file.fileSizeByte),
@@ -50,12 +63,22 @@ const checkFileInFolder = async (folderPath) => {
           })
         } else {
           await postBackupReport({
+            date: moment(file.createDate, 'x').format('YYYYMMDD'),
+            time: moment(file.createDate, 'x').format('HH:mm:ss'),
+            clientId: ClientID,
             fileName: file.fileName,
-            fileSizeByte: parseFloat(file.fileSizeByte),
-            fileSizeMb: parseFloat(file.fileSizeMb),
-            date: moment(file.createDate, 'x').format('YYYYMMDDHHmm'),
-            status: 'F'
-          })
+            fileSizeByte: file.fileSizeByte,
+            fileSizeKb: file.fileSizeKb,
+            fileSizeMb: file.fileSizeMb,
+            status: 'F',
+          });
+          // await postBackupReport({
+          //   fileName: file.fileName,
+          //   fileSizeByte: parseFloat(file.fileSizeByte),
+          //   fileSizeMb: parseFloat(file.fileSizeMb),
+          //   date: moment(file.createDate, 'x').format('YYYYMMDDHHmm'),
+          //   status: 'F'
+          // })
         }
       }
     })

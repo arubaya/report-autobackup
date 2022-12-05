@@ -50,18 +50,29 @@ const putBackupFileSize = async (id, data) => {
 
 /**
  * Insert new row in table tblbackupresult
- * @param {{date: string, fileName: string, fileSizeByte: number, fileSizeMb: number, status: "S" | "F"}} data Data to be inserted 
+ * @param {{date: string, time: string, clientId: string, fileName: string, fileSizeByte: number, fileSizeKb: number, fileSizeMb: number, status: "S" | "F"}} data Data to be inserted 
  * @returns 
  */
 const postBackupReport = async (data) => {
   const rows = await BackupResult.create({
-    FileCreateDate: data.date,
+    Dt: data.date,
+    Tm: data.time,
+    ReportDt: moment().format('YYYYMMDDHHmm'),
+    CtName: data.clientId,
     FileName: data.fileName,
-    SizeFileByte: data.fileSizeByte,
-    SizeFileMb: data.fileSizeMb,
-    Status: data.status,
-    ReportDate: moment().format('YYYYMMDDHHmm')
+    ZipByte: data.fileSizeByte,
+    ZipKB: data.fileSizeKb,
+    ZipMB: data.fileSizeMb,
+    StatusBackupAuto: data.status,
   })
+  // const rows = await BackupResult.create({
+  //   FileCreateDate: data.date,
+  //   FileName: data.fileName,
+  //   SizeFileByte: data.fileSizeByte,
+  //   SizeFileMb: data.fileSizeMb,
+  //   Status: data.status,
+  //   ReportDate: moment().format('YYYYMMDDHHmm')
+  // })
   const resultJson = JSON.parse(JSON.stringify(rows, null, 2))
   return resultJson
 }
