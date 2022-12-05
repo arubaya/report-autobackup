@@ -2,9 +2,13 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../connection');
 
 const BackupResult = sequelize.define('BackupResult', {
+  Id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true
+  },
   Dt: {
     type: DataTypes.STRING,
-    key: true
+    key: true,
   },
   Tm: {
     type: DataTypes.STRING,
