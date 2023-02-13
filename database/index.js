@@ -23,8 +23,20 @@ const getBackupFileSizeByClientID = async (id) => {
       HostId: id
     }
   })
-  const resultJson = JSON.parse(JSON.stringify(rows, null, 2))
-  return resultJson
+  const resultGetJson = JSON.parse(JSON.stringify(rows, null, 2))
+  if (resultGetJson === null) {
+    const createNewHost = await BackupFileSize.create({
+      HostID: id,
+      FileSizeByte: 0,
+      FileSizeMb: 0,
+      CreateDate: moment().format('YYYYMMDD'),
+    })
+    const resultcreateNewHostJson = JSON.parse(JSON.stringify(createNewHost, null, 2))
+    console.log(resultcreateNewHostJson)
+    return resultcreateNewHostJson
+  } else {
+    return resultGetJson
+  }
 }
 
 
